@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'note_page.dart';
-import 'buttons.dart';
+import 'widgets/buttons.dart';
 
 class SpeakPage extends StatefulWidget {
   const SpeakPage({super.key});

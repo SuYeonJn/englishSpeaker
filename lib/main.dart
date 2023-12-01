@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'buttons.dart';
+import 'widgets/buttons.dart';
 import 'speak_page.dart';
 import 'note_page.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
