@@ -72,6 +72,7 @@ class _ThemePageState extends State<ThemePage> {
     });
     firstText = widget.firstText;
     assistant = Text(dialog[0]["content"]);
+    initGpt();
   }
 
   @override
@@ -84,9 +85,9 @@ class _ThemePageState extends State<ThemePage> {
   late Widget assistant;
   List dialog = [];
   late String firstText;
+  late List<OpenAIChatCompletionChoiceMessageModel> messages;
 
-  @override
-  Widget build(BuildContext context) {
+  void initGpt() {
     final systemMessage = OpenAIChatCompletionChoiceMessageModel(
       content: [
         OpenAIChatCompletionChoiceMessageContentItemModel.text(
@@ -104,12 +105,14 @@ class _ThemePageState extends State<ThemePage> {
       ],
       role: OpenAIChatMessageRole.assistant,
     );
-
-    List<OpenAIChatCompletionChoiceMessageModel> messages = [
+    messages = [
       systemMessage,
       assistantMessage,
     ];
+  }
 
+  @override
+  Widget build(BuildContext context) {
     Future<String> sendPostRequest(prompt) async {
       OpenAI.apiKey = dotenv.env['apiKey'].toString();
       final userMessage = OpenAIChatCompletionChoiceMessageModel(
