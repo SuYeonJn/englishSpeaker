@@ -39,7 +39,7 @@ class ThemeButton extends StatelessWidget {
     required this.buttonName,
   });
 
-  final String setting;
+  final Map setting;
   final String firstText;
   final String buttonName;
 
@@ -60,6 +60,7 @@ class ThemeButton extends StatelessWidget {
                   builder: (context) => ThemePage(
                     setting: setting,
                     firstText: firstText,
+                    themeName: buttonName,
                   ),
                 ));
           },

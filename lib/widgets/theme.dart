@@ -2,20 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:speech_to_text/speech_recognition_error.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
-
-import 'package:dart_openai/dart_openai.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:dart_openai/dart_openai.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ThemePage extends StatefulWidget {
   const ThemePage({
     Key? key,
     required this.setting,
     required this.firstText,
+    required this.themeName,
   }) : super(key: key);
-  final String setting;
-  final String firstText;
+  final String firstText, themeName;
+  final Map setting;
   @override
   _ThemePageState createState() => _ThemePageState();
 }
@@ -49,16 +50,16 @@ class _ThemePageState extends State<ThemePage> {
 
   //TTS setting
   FlutterTts flutterTts = FlutterTts();
-  Future<void> speak(textToSpeak) async {
-    await flutterTts.speak(textToSpeak); // 텍스트 음성 변환 및 재생
-  }
-
   initTts() async {
     flutterTts.setLanguage('en-US'); // 언어 설정
     flutterTts.setPitch(1.0); // 음성 높낮이 설정
     flutterTts.setSpeechRate(1.0);
     //ios, macOS, Android onlu
     flutterTts.setVoice({"name": "Karen", "locale": "en-AU"});
+  }
+
+  Future<void> speak(textToSpeak) async {
+    await flutterTts.speak(textToSpeak); // 텍스트 음성 변환 및 재생
   }
 
   @override
@@ -87,11 +88,20 @@ class _ThemePageState extends State<ThemePage> {
   late String firstText;
   late List<OpenAIChatCompletionChoiceMessageModel> messages;
 
+  //첫 인삿말 및 세팅 설정
   void initGpt() {
+    String role = widget.setting["role"];
+    String place = widget.setting["place"];
+    String goal = widget.setting["goal"];
+    String setting = """
+    Let's say I am at $place and you are $role.
+    Let's say I approach you, trying to $goal. Let's start a conversation. Speak one sentence at a time. You speak first.
+    """;
+
     final systemMessage = OpenAIChatCompletionChoiceMessageModel(
       content: [
         OpenAIChatCompletionChoiceMessageContentItemModel.text(
-          widget.setting,
+          setting,
         ),
       ],
       role: OpenAIChatMessageRole.system,
@@ -113,6 +123,7 @@ class _ThemePageState extends State<ThemePage> {
 
   @override
   Widget build(BuildContext context) {
+    //대화 리스트 전달
     Future<String> sendPostRequest(prompt) async {
       OpenAI.apiKey = dotenv.env['apiKey'].toString();
       final userMessage = OpenAIChatCompletionChoiceMessageModel(
@@ -155,7 +166,6 @@ class _ThemePageState extends State<ThemePage> {
 
     //마지막 전체 대화 정리
     void finalDialog() async {
-      print("dialog $dialog");
       OpenAI.apiKey = dotenv.env['apiKey'].toString();
 
       final finalMessage = OpenAIChatCompletionChoiceMessageModel(
@@ -174,7 +184,19 @@ class _ThemePageState extends State<ThemePage> {
       );
       String response =
           chatCompletion.choices.first.message.content![0].text.toString();
+      print("dialog $dialog");
       print(response);
+
+      final db = FirebaseFirestore.instance;
+
+      db
+          .collection('users')
+          .doc('user1')
+          .collection('note')
+          .doc(widget.themeName)
+          .set({
+        'content': response,
+      }).onError((e, _) => print("Error writing document: $e"));
     }
 
     return Container(
@@ -284,6 +306,7 @@ class _ThemePageState extends State<ThemePage> {
     );
   }
 
+  //stt 설정
   void startListening() {
     _logEvent('start listening');
     lastWords = '';

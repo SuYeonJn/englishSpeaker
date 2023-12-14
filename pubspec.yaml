@@ -7,7 +7,9 @@ environment:
   sdk: ">=3.1.2 <4.0.0"
 
 dependencies:
+  cloud_firestore: ^4.13.6
   dart_openai: ^4.1.4
+  firebase_core: ^2.24.2
   flutter:
     sdk: flutter
   flutter_dotenv: ^5.1.0

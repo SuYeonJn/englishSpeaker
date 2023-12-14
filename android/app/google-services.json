@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "209401081302",
+    "project_id": "english-speaker-a3c8b",
+    "storage_bucket": "english-speaker-a3c8b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:209401081302:android:6fe3d9cf022aed622d0877",
+        "android_client_info": {
+          "package_name": "com.example.english_speaker"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCrcEBRo6T3v7ltd9nQn2oe3ZuMFcY5QyA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
