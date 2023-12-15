@@ -8,6 +8,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:dart_openai/dart_openai.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import 'dart:convert';
+
 class ThemePage extends StatefulWidget {
   const ThemePage({
     Key? key,
@@ -185,7 +187,6 @@ class _ThemePageState extends State<ThemePage> {
       String response =
           chatCompletion.choices.first.message.content![0].text.toString();
       print("dialog $dialog");
-      print(response);
 
       final db = FirebaseFirestore.instance;
 

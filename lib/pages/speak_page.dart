@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'note_page.dart';
 import '../widgets/buttons.dart';
@@ -18,23 +19,25 @@ class SpeakPage extends StatefulWidget {
 }
 
 class _SpeakPageState extends State<SpeakPage> {
-  // var settings = [
-  //   """Let's say I am at a McDonald's.
+  Map notes = {};
 
-  //     There are three types of menus: Cheeseburger, Bulgogi burger, shrimp burger.
-  //     There are two types of toppings: tomato, lettuce.
-  //     There are two types of side dishes: french fries, onion rings.
-  //     There are two options: Eat here, take out.
-
-  //     You are a staff at McDonald's who receives orders, and I am the customer. Let's say I approach you, trying to order a food. Let's start a conversation. Speak one sentence at a time. You speak first.""",
-  //   """Let's say you are user's close friend.
-  //    Let's say I approach you, and say hello to you. You are a friendly 21-year-old college student.  Let's start a conversation. Speak one sentence at a time. You speak first.""",
-  //   """Let's say I am Hotel.
-  //     You are a staff at Hotel, and I am the customer. Let's say I approach you, trying to check in. Let's start a conversation. Speak one sentence at a time. You speak first."""
-  // ];
+  void _fromFirestore() async {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    db.collection("users").doc("user1").collection("note").get().then(
+      (querySnapshot) {
+        print("Successfully completed");
+        for (var docSnapshot in querySnapshot.docs) {
+          final data = docSnapshot.data();
+          notes[docSnapshot.id] = data["content"];
+        }
+      },
+      onError: (e) => print("Error completing: $e"),
+    );
+  }
 
   @override
   void initState() {
+    _fromFirestore();
     super.initState();
   }
 
@@ -45,7 +48,7 @@ class _SpeakPageState extends State<SpeakPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < widget.themeList.length; i++)
               ThemeButton(
                   setting: widget.settingList[i],
                   firstText: widget.greetingList[i],
@@ -58,7 +61,9 @@ class _SpeakPageState extends State<SpeakPage> {
           Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => const NotePage(),
+                builder: (context) => NotePage(
+                  notes: notes,
+                ),
               ));
         },
         child: const Icon(Icons.note_sharp),

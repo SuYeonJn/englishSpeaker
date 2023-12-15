@@ -8,22 +8,26 @@ class MainButton extends StatelessWidget {
   final Widget page;
   @override
   Widget build(BuildContext context) {
-    return TextButton(
-      style: TextButton.styleFrom(
+    return SizedBox(
+      width: MediaQuery.of(context).size.width * 0.3,
+      height: MediaQuery.of(context).size.width * 0.2,
+      child: TextButton(
+        style: TextButton.styleFrom(
           backgroundColor: const Color.fromARGB(255, 17, 14, 158),
-          padding: const EdgeInsets.all(50)),
-      onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => page,
+        ),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => page,
+            ),
+          );
+        },
+        child: Text(
+          buttonName,
+          style: const TextStyle(
+            color: Colors.white,
           ),
-        );
-      },
-      child: Text(
-        buttonName,
-        style: const TextStyle(
-          color: Colors.white,
         ),
       ),
     );

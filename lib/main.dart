@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 import 'widgets/buttons.dart';
 import 'pages/speak_page.dart';
-import 'pages/note_page.dart';
 import 'pages/audio_page.dart';
 import 'pages/shorts_page.dart';
+import 'pages/reading_page.dart';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
@@ -113,8 +113,8 @@ class _HomePageState extends State<HomePage> {
                   page: AudioPage(),
                 ),
                 MainButton(
-                  buttonName: "Note",
-                  page: NotePage(),
+                  buttonName: "News/Article",
+                  page: ReadingPage(),
                 ),
               ],
             )
